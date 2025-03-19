@@ -1,0 +1,33 @@
+[
+  {
+    "bodyStyle": "SUV", 
+    "certified": false, 
+    "cityFuelEfficiency": 27, 
+    "doors": "4 door", 
+    "driveLine": "All-Wheel Drive", 
+    "engine": "I-3 cyl", 
+    "engineSize": "1.5L", 
+    "exteriorColor": "Boulder Gray Pearl", 
+    "fuelType": "Regular Unleaded", 
+    "highwayFuelEfficiency": 32, 
+    "interiorColor": "Charcoal", 
+    "internetPrice": "35787.0", 
+    "inventoryDate": "09/06/2024", 
+    "inventoryType": "new", 
+    "link": "/new/Nissan/2025-Nissan-Rogue-c90ff0c0ac1824f8dd7643ee57648014.htm", 
+    "make": "Nissan", 
+    "model": "Rogue", 
+    "modelYear": 2025, 
+    "msrp": "$37,925", 
+    "newOrUsed": "new", 
+    "normalFuelType": "Gasoline", 
+    "odometer": 2, 
+    "retailValue": "36787.0", 
+    "status": "live", 
+    "stockNumber": "SC768775", 
+    "transmission": "Variable", 
+    "trim": "Rock Creek", 
+    "vin": "5N1BT3BBXSC768775", 
+    "year": 2025
+  }
+]
