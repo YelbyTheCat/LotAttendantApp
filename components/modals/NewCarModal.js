@@ -1,4 +1,4 @@
-import React from 'react';
+import {React, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
 import BaseModal from './BaseModal';
@@ -10,19 +10,26 @@ import {getByVin} from '../../actions/vin';
 
 const NewCarModal = ({show, setShow, title = 'Add Car', onSubmit, navigation}) => {
   
-  const {control, handleSubmit, setValue, getValues, formState: {errors}} = useForm();
+  const {control, setValue, getValues, reset, handleSubmit, formState: {errors}} = useForm();
 
   // const onSubmit = data => {
   //   console.log(data);
   // };
 
+  useEffect(() => {
+    if (!show) {
+      reset();
+    }
+  }, [show, reset]);
+
   const checkVin = async vin => {
+    console.log('----Checking VIN----');
     console.log('Vin:', vin);
     if (!vin) return;
     try {
       const res = await getByVin(vin);
       const {data} = res;
-      console.log('data', data);
+      // console.log('data', data);
       const carInfo = data.Results[0];
 
       if (carInfo.ErrorCode !== '0') return;
@@ -31,7 +38,6 @@ const NewCarModal = ({show, setShow, title = 'Add Car', onSubmit, navigation}) =
         Make: ${carInfo.Make}\n
         Model: ${carInfo.Model}\n
         Year: ${carInfo.ModelYear}\n
-        color: ${carInfo.Color}\n
         trim: ${carInfo.Trim}
         `);
       for (let i = 0; i < relevantInfo.length; i++) {
@@ -45,21 +51,29 @@ const NewCarModal = ({show, setShow, title = 'Add Car', onSubmit, navigation}) =
     } catch (e) {
       console.error(e);
     }
+    console.log('----Checking VIN X----');
   };
 
   const handleScan = scan => {
     if (!scan) return;
-    setValue('vin', scan);
+    const upper = scan.toUpperCase();
+    setValue('vin', upper);
+    checkVin(upper);
+  };
+
+  const handleFormSubmit = data => {
+    console.log('Submitting form with data:', data);
+    onSubmit(data);
+    reset();
   };
 
   return (
     <BaseModal {...{title, show, setShow}}>
-      <FormInputController name='vin' placeholder='VIN' autoCapitalize="characters" {...{control, errors}}/>
       
       {/* Wrap the Button in a View with margin */}
       <View style={styles.buttonContainer}>
         <View style={styles.button}>
-          <Button title="Scan Barcode" onPress={() => navigation.navigate('VINScanner', {onScan: handleScan})}/>
+          <Button title="Scan Vin" onPress={() => navigation.navigate('VINScanner', {onScan: handleScan})}/>
         </View>
         <View style={styles.button}>
           <Button title="Check Vin" onPress={() => {
@@ -70,14 +84,15 @@ const NewCarModal = ({show, setShow, title = 'Add Car', onSubmit, navigation}) =
         </View>
       </View>
 
+      <FormInputController name='vin' placeholder='VIN' autoCapitalize="characters" {...{control, errors}}/>
       <FormInputController name="make" placeholder='Make' {...{ control, errors }}/>
       <FormInputController name="model" placeholder='Model' {...{ control, errors }}/>
       <FormInputController name="year" placeholder='Year' {...{ control, errors }}/>
-      <FormInputController name="trim" placeholder='trim' {...{ control, errors }}/>
+      <FormInputController name="trim" placeholder='Trim' {...{ control, errors }}/>
       
       {/* Wrap the Button in a View with margin */}
       <View style={styles.buttonContainer}>
-        <Button title="Submit" onPress={handleSubmit(onSubmit)}/>
+        <Button title="Submit" onPress={handleSubmit(handleFormSubmit)}/>
       </View>
     </BaseModal>
   );

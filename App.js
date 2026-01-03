@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator();
 
 // npx expo start
 
-import HomeScreen from './components/pages/HomeScreen';
+// import HomeScreen from './components/pages/HomeScreen';
 import Vehicles from './components/pages/Vehicles/Vehicles';
 import Vehicle from './components/pages/Vehicles/Vehicle';
 import VinScan from './components/vinReading/VinScan';
@@ -20,13 +20,13 @@ import VINOCR from './components/vinReading/VINOCR';
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen}/>
+      <Stack.Navigator initialRouteName="Vehicles">
+        {/* <Stack.Screen name="Home" component={HomeScreen}/> */}
         <Stack.Screen name="Vehicles" component={Vehicles} options={{title: 'Vehicles'}}/>
         <Stack.Screen name="Vehicle" component={Vehicle} options={{title: 'Vehicle Details'}}/>
         <Stack.Screen name="VinScan" component={VinScan} options={{title: 'Vin Scan'}}/>
         <Stack.Screen name="VINScanner" component={VINScanner} options={{title: 'Vin Scanner'}}/>
-        <Stack.Screen name="VINOCR" component={VINOCR} options={{title: 'Vin ORC'}}/>
+        {/* <Stack.Screen name="VINOCR" component={VINOCR} options={{title: 'Vin ORC'}}/> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

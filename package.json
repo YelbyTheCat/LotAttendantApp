@@ -1,5 +1,5 @@
 {
-  "name": "lotattendantapp",
+  "name": "vehiclecheckin",
   "version": "1.0.0",
   "main": "expo/AppEntry.js",
   "devNote": "npm run start",

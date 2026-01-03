@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { View, Text } from 'react-native';
 
-import { getVehicleById, tempData } from '../../../database/tables/vehicles';
+import { getVehicleById} from '../../../database/tables/vehicles';
 
 const Vehicle = ({route}) => {
 
@@ -32,17 +32,11 @@ const Vehicle = ({route}) => {
       {error && <Text>{error}</Text>}
       {vehicle && <View>
         <Text>Vin: {vehicle.vin}</Text>
-        <Text>ro: {vehicle.ro}</Text>
-        <Text>make: {vehicle.make}</Text>
-        <Text>model: {vehicle.model}</Text>
-        <Text>carColor: {vehicle.carColor}</Text>
-        <Text>interiorColor: {vehicle.interiorColor}</Text>
-        <Text>miles: {vehicle.miles}</Text>
-        <Text>gas: {`${vehicle.gas}%`}</Text>
-        <Text>location: {vehicle.location}</Text>
-        <Text>used: {vehicle.used ? 'Used' : 'New'}</Text>
-        <Text>year: {vehicle.year}</Text>
-        <Text>currentOwner: {vehicle.currentOwner}</Text>
+        <Text>Year: {vehicle.year}</Text>
+        <Text>Make: {vehicle.make}</Text>
+        <Text>Model: {vehicle.model}</Text>
+        <Text>Odometer: {vehicle.miles}</Text>
+        <Text>Location: {vehicle.location}</Text>
       </View>
       }
     </View>

@@ -1,16 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Pressable, Image, Button } from 'react-native';
+import {View, Text, Pressable, Image, Button, StyleSheet, FlatList} from 'react-native';
 
-import { initializeDatabase, createVehiclesTable, getAllVehicles, insertVehicles, tempData, getTableSchema, dropTable } from '../../../database/tables/vehicles';
+import {initializeDatabase, createVehiclesTable, getAllVehicles, insertVehicles, tempData, getTableSchema, dropTable} from '../../../database/tables/vehicles';
 
-import nissanLogo from '../../../assets/logos/nissan.png';
 import hyundaiLogo from '../../../assets/logos/hyundai.gif';
+import nissanLogo from '../../../assets/logos/nissan.png';
+import fordLogo from '../../../assets/logos/ford.png';
+import subaruLogo from '../../../assets/logos/subaru.png';
+import lincolnLogo from '../../../assets/logos/lincoln.png';
+import kiaLogo from '../../../assets/logos/kia.png';
+import hondaLogo from '../../../assets/logos/honda.png';
+import nullLogo from '../../../assets/logos/null.gif';
+
 // import NewVehicleModal from './NewVehicleModal';
 import axios from 'axios';
 import NewCarModal from '../../modals/NewCarModal';
 
-const Vehicles = ({ navigation }) => {
+const getLogo = make => {
+  try {
+    if (!make) return <Image source={nullLogo} style={{width: 50, height: 50, resizeMode: 'contain'}}/>;
+    switch (make.toLowerCase()) {
+      case 'ford': return <Image source={fordLogo} style={{width: 50, height: 50, resizeMode: 'contain'}}/>;
+      case 'honda': return <Image source={hondaLogo} style={{width: 50, height: 50, resizeMode: 'contain'}}/>;
+      case 'hyundai': return <Image source={hyundaiLogo} style={{width: 50, height: 50, resizeMode: 'contain'}}/>;
+      case 'kia': return <Image source={kiaLogo} style={{width: 50, height: 50, resizeMode: 'contain'}}/>;
+      case 'lincoln': return <Image source={lincolnLogo} style={{width: 50, height: 50, resizeMode: 'contain'}}/>;
+      case 'nissan': return <Image source={nissanLogo} style={{width: 50, height: 50, resizeMode: 'contain'}}/>;
+      case 'subaru': return <Image source={subaruLogo} style={{width: 50, height: 50, resizeMode: 'contain'}}/>;
+      default: return null;
+    }
+  } catch (e) {
+    console.warn(`No logo found for make: ${make}`);
+    return null;
+  }
+};
+
+const Vehicles = ({navigation}) => {
 
   const [cars, setCars] = useState(null);
   const [show, setShow] = useState(false);
@@ -43,25 +69,6 @@ const Vehicles = ({ navigation }) => {
     }
   };
 
-  const getStockNumber = (vin, year) => {
-    if (!vin) return 'N/A';
-    if (year !== new Date().getFullYear()) return `${year}${vin.substring(vin.length - 4)}`;
-    return vin.substring(vin.length - 8);
-  };
-
-  const getLogo = make => {
-    try {
-      switch (make.toLowerCase()) {
-        case 'nissan': return <Image source={nissanLogo} style={{ width: 50, height: 50, resizeMode: 'contain' }}/>;
-        case 'hyundai': return <Image source={hyundaiLogo} style={{ width: 50, height: 50, resizeMode: 'contain' }}/>;
-        default: return null;
-      }
-    } catch (e) {
-      console.warn(`No logo found for make: ${make}`);
-      return null;
-    }
-  };
-
   const checkVin = async vin => {
     try {
       const response = await axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${vin}?format=json`);
@@ -71,8 +78,7 @@ const Vehicles = ({ navigation }) => {
         console.log(`
           Make: ${carInfo.Make}\n
           Model: ${carInfo.Model}\n
-          Year: ${carInfo.ModelYear}\n
-          color: ${carInfo.Color}
+          Year: ${carInfo.ModelYear}
           `);
       }
     } catch (e) {
@@ -80,38 +86,40 @@ const Vehicles = ({ navigation }) => {
     }
   };
 
-  const handleScan = vin => {
-    if (!vin) return;
-    console.log('Scanned VIN:', vin);
-    // Do something with the scanned VIN, like updating the state
-    console.log('Before Checked stuff');
-    checkVin(vin);
-    console.log('Checked stuff');
-  };
-
   return (
-    <View>
-      <View>
-        <Text>Vehicles</Text>
-        <Button title="New Car" onPress={() => setShow(true)}/>
-        <Button title="Vin Scan" onPress={() => navigation.navigate('VINScanner', {onScan: handleScan})}/>
-        {/* <Button title="Drop Table" onPress={() => dropTable()}/> */}
-      </View>
-      {cars && cars.map(car => (
-        <View key={car.id} style={{ backgroundColor: 'lightblue', marginBottom: 2, marginHorizontal: 6, borderColor: 'black', borderWidth: 3 }}>
-          <Pressable onPress={() => navigation.navigate('Vehicle', { id: car.id })}>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ flex: 4, paddingLeft: 4 }}>
-                <Text style={{ fontSize: 14 }}>{`RO: ${car?.ro} | Stock: ${getStockNumber(car.vin, car.year)}`}</Text>
-                <Text style={{ fontSize: 20 }}>{`${car.make} | ${car.model}`}</Text>
+    <View style={{flex: 1}}>
+      <Button style={styles.button} title="Check-in Vehicle" onPress={() => setShow(true)}/>
+      {/* <Button title="Drop Table" onPress={() => dropTable()}/> */}
+      <FlatList
+        data={cars ? cars : []}
+        keyExtractor={item => item.id.toString()}
+        contentContainerStyle={{paddingBottom: 20}}
+        renderItem={({item: car}) => (
+          <View style={styles.card}>
+            <Pressable onPress={() => navigation.navigate('Vehicle', {id: car.id})}>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flex: 4, paddingLeft: 4}}>
+                  <Text style={{fontSize: 14}}>
+                    VIN: {car?.vin?.slice(0, -8)}
+                    <Text style={{textDecorationLine: 'underline'}}>
+                      {car?.vin?.slice(-8)}
+                    </Text>
+                    {` | Odometer: ${car.odometer}`}
+                  </Text>
+                  <Text style={{fontSize: 20}}>
+                    {car.make} | {car.model}
+                  </Text>
+                </View>
+                <View style={{flex: 1}}>
+                  {getLogo(car.make)}
+                </View>
               </View>
-              <View style={{ flex: 1 }}>
-                {getLogo(car.make)}
-              </View>
-            </View>
-          </Pressable>
-        </View>
-      ))}
+            </Pressable>
+          </View>
+        )}
+      />
+
+
       {/* <NewVehicleModal {...{modalVisible, setModalVisible, onSubmit}}/> */}
       <NewCarModal {...{show, setShow, onSubmit, navigation}}/>
     </View>
@@ -121,5 +129,22 @@ const Vehicles = ({ navigation }) => {
 Vehicles.propTypes = {
   navigation: PropTypes.object
 };
+
+const styles = StyleSheet.create({
+  button: {
+    borderRadius: 5,
+    padding: 10,
+    margin: 10,
+    backgroundColor: '#007bff',
+    alignItems: 'center'
+  },
+  card: {
+    backgroundColor: 'lightblue',
+    marginBottom: 2,
+    marginHorizontal: 6,
+    borderColor: 'black',
+    borderWidth: 3
+  }
+});
 
 export default Vehicles;

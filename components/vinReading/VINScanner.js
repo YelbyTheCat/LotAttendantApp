@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 
-const VINScanner = ({ route }) => {
+const VINScanner = ({ route, navigation }) => {
   const { onScan } = route.params;
 
   const [permission, requestPermission] = useCameraPermissions();
@@ -29,7 +29,8 @@ const VINScanner = ({ route }) => {
     setScanned(true);
     console.log(`Barcode scanned: ${data}`);
     onScan(data); // Use scanned data
-    alert(`VIN number scanned: ${data}`);
+    navigation.goBack();
+    // alert(`VIN number scanned: ${data}`);
   };
 
   // Check permission status
@@ -48,7 +49,7 @@ const VINScanner = ({ route }) => {
         facing='back'
         onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
       />
-      {scanned && <Button title="Tap to Scan Again" onPress={() => setScanned(false)}/>}
+      {/* {scanned && <Button title="Tap to Scan Again" onPress={() => setScanned(false)}/>} */}
     </View>
   );
 };
@@ -62,6 +63,7 @@ const styles = StyleSheet.create({
 
 VINScanner.propTypes = {
   route: PropTypes.object.isRequired,
+  navigation: PropTypes.object.isRequired
 };
 
 export default VINScanner;

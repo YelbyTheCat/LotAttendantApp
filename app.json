@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "LotAttendantApp",
-    "slug": "LotAttendantApp",
+    "name": "Vehicle Checkin",
+    "slug": "vehiclecheckin",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,15 +20,16 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.yelbythecat.LotAttendantApp"
+      "package": "com.yelbythecat.vehiclecheckin"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "e04920d6-0dd2-47e4-8ba2-9baf4d1ddc13"
+        "projectId": "e1302d4e-c4d5-4c26-81e6-bc10b23613af"
       }
-    }
+    },
+    "owner": "yelbythecat"
   }
 }
